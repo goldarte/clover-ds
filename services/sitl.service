@@ -1,0 +1,12 @@
+[Unit]
+Description=SITL service
+
+[Service]
+WorkingDirectory=/home/user/sitl
+User=user
+ExecStart=/home/user/sitl/px4 /home/user/sitl /home/user/sitl/configs/lpe/iris_gps
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
