@@ -55,10 +55,14 @@ RUN cd /home/$ROSUSER/catkin_ws \
 # Clone and build PX4 firmware
 RUN git clone --depth 1 https://github.com/CopterExpress/Firmware -b v1.8.2-clever.10 /home/$ROSUSER/Firmware \
 	&& cd /home/$ROSUSER/Firmware \
-	&& make posix_sitl_default \
-	&& mkdir -p /home/$ROSUSER/sitl/configs \
+	&& make posix_sitl_default
+
+# Copy built files
+RUN mkdir -p /home/$ROSUSER/sitl/configs \
 	&& cp /home/$ROSUSER/Firmware/build/posix_sitl_default/px4 /home/$ROSUSER/sitl \
 	&& cp -r /home/$ROSUSER/Firmware/ROMFS /home/$ROSUSER/sitl \
+	&& cp -r /home/$ROSUSER/Firmware/posix-configs /home/$ROSUSER/sitl \
+	&& cp -r /home/$ROSUSER/Firmware/test_data /home/$ROSUSER/sitl \
 	&& rm -rf /home/$ROSUSER/Firmware
 
 # Copy data from repo
