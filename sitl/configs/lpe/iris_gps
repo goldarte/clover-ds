@@ -14,6 +14,7 @@ param set COM_DISARM_LAND 1.0
 param set COM_RC_IN_MODE 1
 param set LPE_FUSION 145
 param set NAV_DLL_ACT 0
+param set MAV_BROADCAST 1
 param set MC_ROLLRATE_P 0.2
 param set MC_PITCHRATE_P 0.2
 param set MC_PITCH_P 6
