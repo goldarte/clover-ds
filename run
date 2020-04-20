@@ -44,6 +44,7 @@ done
 echo -e "\nRun image $IMAGE_NAME with name and hostname $CONTAINER_NAME\nListening UDP port on host machine for simulator data is $PORT\n"
 
 docker run \
+    -d \
     -it \
     --rm \
     --name $CONTAINER_NAME \

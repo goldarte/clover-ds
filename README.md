@@ -27,6 +27,7 @@ Execute this command to run container with name and hostname `sim`:
 
 ```cmd
 docker run \
+    -d \
     -it \
     --rm \
     --name sim-1 \
