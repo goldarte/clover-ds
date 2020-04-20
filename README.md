@@ -36,7 +36,7 @@ docker run \
     --tmpfs /run \
     --tmpfs /run/lock \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-    -p 14561:14560/udp \
+    -p 14560:14560/udp \
     goldarte/clover-ds
 ```
 
@@ -57,7 +57,7 @@ If you want to run more copies of this container you can specify options for `ru
 Options:
     -h --help       Print this message
     -i --id=ID      Set container name and hostname to sim-<id> (default: 1)
-    -p --port=PORT  Set UDP listening port for simulator data (default: 14601)
+    -p --port=PORT  Set UDP listening port for simulator data (default: 14560)
 
 ```
 
