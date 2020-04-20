@@ -1,5 +1,6 @@
 # Use px4 base image for simulation
 FROM px4io/px4-dev-ros-melodic
+ENV container=docker
 
 # Use a non-privileged user to make ROS happy
 ENV ROSUSER="user"
@@ -85,8 +86,7 @@ RUN systemctl enable roscore \
 # Expose ROS and local Mavlink ports
 EXPOSE 14556/udp 14557/udp 14560/udp 11311 8080 8081 57575
 
-VOLUME [ "/sys/fs/cgroup" ]
-
+STOPSIGNAL SIGRTMIN+3
 ENTRYPOINT ["/scripts/entrypoint.sh"]
 CMD ["/sbin/init"]
 

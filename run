@@ -1,20 +1,20 @@
 #!/bin/bash
 
 IMAGE_NAME=goldarte/clover-ds
-DEFAULT_CONTAINER_NAME=sim-0
+DEFAULT_ID=1
 DEFAULT_PORT=14560
-CONTAINER_NAME=$DEFAULT_CONTAINER_NAME
+CONTAINER_NAME=sim-$DEFAULT_ID
 PORT=$DEFAULT_PORT
 
 function usage()
 {
     echo ""
-    echo "Script for running docker image $IMAGE_NAME with name and hostname $DEFAULT_CONTAINER_NAME by default"
+    echo "Script for running docker image $IMAGE_NAME"
     echo "Usage: ./run [options]"
     echo "Options:"
-    echo -e "\t-h --help \t\tPrint this message"
-    echo -e "\t-i --id=ID \t\tSet container name and hostname to sim-<id>"
-    echo -e "\t-p --port=PORT \t\tSet listening port on host machine for simulator data"
+    echo -e "\t-h --help \tPrint this message"
+    echo -e "\t-i --id=ID \tSet container name and hostname to sim-<id> (default: $DEFAULT_ID)"
+    echo -e "\t-p --port=PORT \tSet UDP listening port for simulator data (default: $DEFAULT_PORT)"
     echo ""
 }
 
@@ -31,6 +31,7 @@ while [ "$1" != "" ]; do
             ;;
         -p | --port)
             PORT=$VALUE
+            ;;
         *)
             echo "ERROR: unknown parameter \"$PARAM\""
             usage
@@ -43,12 +44,13 @@ done
 echo -e "\nRun image $IMAGE_NAME with name and hostname $CONTAINER_NAME\nListening UDP port on host machine for simulator data is $PORT\n"
 
 docker run \
-    -d \
     -it \
     --rm \
     --name $CONTAINER_NAME \
     --hostname $CONTAINER_NAME \
-    --privileged=true \
+    --tmpfs /tmp \
+    --tmpfs /run \
+    --tmpfs /run/lock \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
     -p $PORT:14560/udp \
     $IMAGE_NAME
