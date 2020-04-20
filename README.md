@@ -29,30 +29,38 @@ Execute this command to run container with name and hostname `sim`:
 docker run \
     -it \
     --rm \
-    --name sim \
-    --hostname sim \
-    --privileged=true \
+    --name sim-1 \
+    --hostname sim-1 \
+    --tmpfs /tmp \
+    --tmpfs /run \
+    --tmpfs /run/lock \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+    -p 14561:14560/udp \
     goldarte/clover-ds
 ```
 
-Or simple execute `run` bash script to run container with name and hostname `sim-0`.
+Or simple execute `run` bash script to run container with name and hostname `sim-1`.
 
 ```cmd
 ./run
 ```
 
-There will be 3 services running inside the container: roscore, clover and sitl.
+There will be 3 services running inside the container: roscore, clover and sitl. Sitl service will listen UDP messages from external simulator (like Gazebo or Airsim) on UDP port 14561.
 
 You can manage them using `systemctl` and watch their logs with `journalctl -u <service name>`. For example if you want to restart the service `clover`, just use `systemctl restart clover`.
 
-If you want to run more copies of this container you can specify the first parameter of `run` script:
+If you want to run more copies of this container you can specify options for `run` script:
 
 ```cmd
-./run <param>
+./run [options]
+Options:
+    -h --help       Print this message
+    -i --id=ID      Set container name and hostname to sim-<id> (default: 1)
+    -p --port=PORT  Set UDP listening port for simulator data (default: 14601)
+
 ```
 
-This will run new container with name and hostname `sim-<param>`.
+> Each time you want to run new container it must have UDP port for simulator data that differs from the UDP ports for simulator data of the other running containers!
 
 If you want to open new terminal session in working container, use following command:
 
@@ -60,8 +68,15 @@ If you want to open new terminal session in working container, use following com
 docker exec -it <container name> bash
 ```
 
-To stop and kill containers you can use
+To stop or kill containers you can use
 
 ```cmd
+docker stop <container name>
 docker kill <container name>
+```
+
+To get information about running containers you can use
+
+```cmd
+docker ps
 ```
