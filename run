@@ -8,6 +8,7 @@ DEFAULT_LON=37.724518
 ID=$DEFAULT_ID
 CONTAINER_NAME=sim-$DEFAULT_ID
 PORT=$DEFAULT_PORT
+HEADLESS=
 LAT=$DEFAULT_LAT
 LON=$DEFAULT_LON
 
@@ -19,8 +20,10 @@ function usage()
     echo "Options:"
     echo -e "  -h --help \t\tPrint this message"
     echo -e "  -i --id=ID \t\tID of simulated copter. Used as MAV_SYS_ID."
-    echo -e "\t\t\tContainer name and hostname are set to sim-<id> (default: $DEFAULT_ID)"
-    echo -e "  -p --port=PORT \tSet UDP listening port for simulator data (default: $DEFAULT_PORT)"
+    echo -e "\t\t\tContainer name and hostname are set to sim-<ID> (default: $DEFAULT_ID)"
+    echo -e "  -p --port=PORT \tInitial UDP port (default: $DEFAULT_PORT)"
+    echo -e "\t\t\tUDP listening port for simulator data is set to <PORT>+<ID>"
+    echo -e "  --headless \tSet this option to run lightweight jmavsim simulator directly in container"
     echo -e "  --lat=LATITUDE \tSet initial latitude (default: $DEFAULT_LAT)"
     echo -e "  --lon=LONGITUDE \tSet initial longitude (default: $DEFAULT_LON)"
     echo ""
@@ -41,6 +44,9 @@ while [ "$1" != "" ]; do
         -p | --port)
             PORT=$VALUE
             ;;
+        --headless)
+            HEADLESS=1
+            ;;
         --lat)
             LAT=$VALUE
             ;;
@@ -56,9 +62,9 @@ while [ "$1" != "" ]; do
     shift
 done
 
-echo -e "\nRun image $IMAGE_NAME with name and hostname $CONTAINER_NAME\nListening UDP port on host machine for simulator data is $PORT\n"
+echo -e "\nRun image $IMAGE_NAME with name and hostname $CONTAINER_NAME"
 
-docker run \
+CMD1="docker run \
     -d \
     -it \
     --rm \
@@ -68,8 +74,23 @@ docker run \
     --tmpfs /run \
     --tmpfs /run/lock \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-    -p $PORT:14560/udp \
     -e PX4_HOME_LAT=$LAT \
     -e PX4_HOME_LON=$LON \
-    -e MAV_SYS_ID=$ID \
-    $IMAGE_NAME
+    -e MAV_SYS_ID=$ID "
+
+CMD2="-p $((PORT+ID)):14560/udp "
+CMD3="-e HEADLESS=$HEADLESS "
+CMD4="$IMAGE_NAME"
+
+if [ -z $HEADLESS ]
+then
+    CMD=$CMD1$CMD2$CMD4
+    echo -e "Listening UDP port on host machine for simulator data is $((PORT+ID))"
+else
+    CMD=$CMD1$CMD3$CMD4
+    echo -e "Running in HEADLESS mode"
+fi
+
+echo -e "MAV_SYS_ID is set to $MAV_SYS_ID\n"
+
+eval $CMD
