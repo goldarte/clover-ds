@@ -3,8 +3,13 @@
 IMAGE_NAME=goldarte/clover-ds
 DEFAULT_ID=1
 DEFAULT_PORT=14560
+DEFAULT_LAT=55.703712
+DEFAULT_LON=37.724518
+ID=$DEFAULT_ID
 CONTAINER_NAME=sim-$DEFAULT_ID
 PORT=$DEFAULT_PORT
+LAT=$DEFAULT_LAT
+LON=$DEFAULT_LON
 
 function usage()
 {
@@ -12,9 +17,12 @@ function usage()
     echo "Script for running docker image $IMAGE_NAME"
     echo "Usage: ./run [options]"
     echo "Options:"
-    echo -e "\t-h --help \tPrint this message"
-    echo -e "\t-i --id=ID \tSet container name and hostname to sim-<id> (default: $DEFAULT_ID)"
-    echo -e "\t-p --port=PORT \tSet UDP listening port for simulator data (default: $DEFAULT_PORT)"
+    echo -e "  -h --help \t\tPrint this message"
+    echo -e "  -i --id=ID \t\tID of simulated copter. Used as MAV_SYS_ID."
+    echo -e "\t\t\tContainer name and hostname are set to sim-<id> (default: $DEFAULT_ID)"
+    echo -e "  -p --port=PORT \tSet UDP listening port for simulator data (default: $DEFAULT_PORT)"
+    echo -e "  --lat=LATITUDE \tSet initial latitude (default: $DEFAULT_LAT)"
+    echo -e "  --lon=LONGITUDE \tSet initial longitude (default: $DEFAULT_LON)"
     echo ""
 }
 
@@ -27,10 +35,17 @@ while [ "$1" != "" ]; do
             exit
             ;;
         -i | --id)
+            ID=$VALUE
             CONTAINER_NAME=sim-$VALUE
             ;;
         -p | --port)
             PORT=$VALUE
+            ;;
+        --lat)
+            LAT=$VALUE
+            ;;
+        --lon)
+            LON=$VALUE
             ;;
         *)
             echo "ERROR: unknown parameter \"$PARAM\""
@@ -54,4 +69,7 @@ docker run \
     --tmpfs /run/lock \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
     -p $PORT:14560/udp \
+    -e PX4_HOME_LAT=$LAT \
+    -e PX4_HOME_LON=$LON \
+    -e MAV_SYS_ID=$ID \
     $IMAGE_NAME
