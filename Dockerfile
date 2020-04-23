@@ -7,17 +7,21 @@ ENV ROSUSER="user"
 WORKDIR /home/$ROSUSER
 RUN echo "$ROSUSER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$ROSUSER
 
-# Install systemd service manager
+# Set environment
 ENV container docker
 ENV LC_ALL C
 ENV DEBIAN_FRONTEND noninteractive
-
 RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list
 
+# Install software
 RUN apt-get update \
-    && apt-get install -y systemd systemd-sysv nano \
+    && apt-get install -y systemd systemd-sysv nano openjdk-8-jdk \
     && apt-get clean
 
+# Change java version to 8:
+RUN update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
+# Set up systemd service manager
 RUN cd /lib/systemd/system/sysinit.target.wants/ \
     && ls | grep -v systemd-tmpfiles-setup | xargs rm -f $1
 
@@ -65,6 +69,12 @@ RUN mkdir -p /home/$ROSUSER/sitl/configs \
 	&& cp -r /home/$ROSUSER/Firmware/posix-configs /home/$ROSUSER/sitl \
 	&& cp -r /home/$ROSUSER/Firmware/test_data /home/$ROSUSER/sitl \
 	&& rm -rf /home/$ROSUSER/Firmware
+
+# Clone and build jMAVsim
+RUN git clone --depth 1 https://github.com/PX4/jMAVSim /home/$ROSUSER/jMAVSim \
+	&& cd /home/$ROSUSER/jMAVSim \
+	&& git submodule update --init --recursive \
+	&& ant create_run_jar copy_res
 
 # Copy data from repo
 COPY launch/clover.launch /home/$ROSUSER/catkin_ws/src/clever/clover/launch
