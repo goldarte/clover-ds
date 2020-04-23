@@ -91,7 +91,8 @@ RUN echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc \
 COPY services/* /lib/systemd/system/
 RUN systemctl enable roscore \
 	&& systemctl enable clover \
-	&& systemctl enable sitl
+	&& systemctl enable sitl \
+	&& systemctl enable jmavsim
 
 # Expose ROS and local Mavlink ports
 EXPOSE 14556/udp 14557/udp 14560/udp 11311 8080 8081 57575
