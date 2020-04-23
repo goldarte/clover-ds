@@ -2,7 +2,7 @@
 Description=jMAVSim headless service
 
 [Service]
-ExecStart=/bin/bash -c ". /scripts/export_env.sh; cd /home/user/jMAVSim/out/production; java -jar jmavsim_run.jar -no-gui"
+ExecStart=/bin/bash /scripts/run_jmavsim.sh
 Restart=on-failure
 RestartSec=1
 
