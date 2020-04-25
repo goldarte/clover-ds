@@ -105,6 +105,6 @@ else
     echo -e "Running in HEADLESS mode"
 fi
 
-echo -e "MAV_SYS_ID is set to $MAV_SYS_ID\n"
+echo -e "MAV_SYS_ID is set to $ID\n"
 
 eval $CMD
