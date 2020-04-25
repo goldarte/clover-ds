@@ -3,7 +3,7 @@ Description=SITL service
 
 [Service]
 ExecStart=/bin/bash -c ". /scripts/export_env.sh; \
-            echo PX4_HOME_LAT=$PX4_HOME_LAT; echo PX4_HOME_LON=$PX4_HOME_LON; echo MAV_SYS_ID=$MAV_SYS_ID; \
+            echo MAV_SYS_ID=$MAV_SYS_ID; \
             sed -i '/MAV_SYS_ID/c param set MAV_SYS_ID '"$MAV_SYS_ID" /home/user/sitl/configs/lpe/iris_gps; \
             /home/user/sitl/px4 -d /home/user/sitl /home/user/sitl/configs/lpe/iris_gps"
 Restart=always
