@@ -5,12 +5,16 @@ DEFAULT_ID=1
 DEFAULT_PORT=14560
 DEFAULT_LAT=55.703712
 DEFAULT_LON=37.724518
+DEFAULT_DX=0
+DEFAULT_DY=0
 ID=$DEFAULT_ID
 CONTAINER_NAME=sim-$DEFAULT_ID
 PORT=$DEFAULT_PORT
 HEADLESS=
 LAT=$DEFAULT_LAT
 LON=$DEFAULT_LON
+DX=$DEFAULT_DX
+DY=$DEFAULT_DY
 
 function usage()
 {
@@ -26,6 +30,8 @@ function usage()
     echo -e "  --headless \tSet this option to run lightweight jmavsim simulator directly in container"
     echo -e "  --lat=LATITUDE \tSet initial latitude (default: $DEFAULT_LAT)"
     echo -e "  --lon=LONGITUDE \tSet initial longitude (default: $DEFAULT_LON)"
+    echo -e "  --dx=DX \tSet dx shift in meters to East (default: $DEFAULT_DX)"
+    echo -e "  --dy=DY \tSet dy shift in meters to North (default: $DEFAULT_DY)"
     echo ""
 }
 
@@ -53,6 +59,12 @@ while [ "$1" != "" ]; do
         --lon)
             LON=$VALUE
             ;;
+        --dx)
+            DX=$VALUE
+            ;;
+        --dy)
+            DY=$VALUE
+            ;;
         *)
             echo "ERROR: unknown parameter \"$PARAM\""
             usage
@@ -74,8 +86,10 @@ CMD1="docker run \
     --tmpfs /run \
     --tmpfs /run/lock \
     -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
-    -e PX4_HOME_LAT=$LAT \
-    -e PX4_HOME_LON=$LON \
+    -e LAT=$LAT \
+    -e LON=$LON \
+    -e DX=$DX \
+    -e DY=$DY \
     -e MAV_SYS_ID=$ID "
 
 CMD2="-p $((PORT+ID)):14560/udp "
