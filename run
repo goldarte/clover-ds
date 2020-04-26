@@ -27,11 +27,11 @@ function usage()
     echo -e "\t\t\tContainer name and hostname are set to sim-<ID> (default: $DEFAULT_ID)"
     echo -e "  -p --port=PORT \tInitial UDP port (default: $DEFAULT_PORT)"
     echo -e "\t\t\tUDP listening port for simulator data is set to <PORT>+<ID>"
-    echo -e "  --headless \tSet this option to run lightweight jmavsim simulator directly in container"
+    echo -e "  --headless \t\tSet this option to run lightweight jmavsim simulator directly in container"
     echo -e "  --lat=LATITUDE \tSet initial latitude (default: $DEFAULT_LAT)"
     echo -e "  --lon=LONGITUDE \tSet initial longitude (default: $DEFAULT_LON)"
-    echo -e "  --dx=DX \tSet dx shift in meters to East (default: $DEFAULT_DX)"
-    echo -e "  --dy=DY \tSet dy shift in meters to North (default: $DEFAULT_DY)"
+    echo -e "  --dx=DX \t\tSet dx shift in meters to East (default: $DEFAULT_DX)"
+    echo -e "  --dy=DY \t\tSet dy shift in meters to North (default: $DEFAULT_DY)"
     echo ""
 }
 
