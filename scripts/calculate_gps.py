@@ -4,8 +4,8 @@ from geographiclib.geodesic import Geodesic
 
 Earth = Geodesic.WGS84
 
-default_lat = 55.703712
-default_lon = 37.724518
+default_lat = 55.7031751
+default_lon = 37.7248118
 
 lat = float(os.environ.get('LAT', default_lat))
 lon = float(os.environ.get('LON', default_lon))
