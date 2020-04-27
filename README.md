@@ -59,10 +59,13 @@ Options:
   -p --port=PORT    Initial UDP port (default: 14560)
                     UDP listening port for simulator data is set to <PORT>+<ID>
   --headless        Set this option to run lightweight jmavsim simulator directly in container
-  --lat=LATITUDE    Set initial latitude (default: 55.703712)
-  --lon=LONGITUDE   Set initial longitude (default: 37.724518)
+  --lat=LATITUDE    Set initial latitude
+  --lon=LONGITUDE   Set initial longitude
   --dx=DX           Set dx shift in meters to East (default: 0)
   --dy=DY           Set dy shift in meters to North (default: 0)
+See defaults for initial latitude and longitude here:
+https://github.com/goldarte/clover-ds/blob/master/scripts/calculate_gps.py#L7
+
 ```
 
 > Each time you want to run new container it must have unique ID and UDP port for simulator data!
