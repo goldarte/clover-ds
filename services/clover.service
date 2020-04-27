@@ -4,8 +4,9 @@ Requires=roscore.service
 
 [Service]
 User=user
-ExecStart=/bin/bash -c ". /home/user/catkin_ws/devel/setup.sh; \
-                      ROS_HOSTNAME=`hostname` exec stdbuf -o L roslaunch clover clover.launch --wait --screen --skip-log-check \
+ExecStart=/bin/bash -c "sudo /bin/bash /scripts/export_env.sh >> /home/user/catkin_ws/devel/setup.sh; \
+                        . /home/user/catkin_ws/devel/setup.sh; \
+                      ROS_HOSTNAME=`hostname` exec stdbuf -o L roslaunch clover clover.launch fcu_sys_id:=$MAV_SYS_ID --wait --screen --skip-log-check \
                       2> >(tee /tmp/clover.err)"
 
 [Install]
