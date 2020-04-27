@@ -42,7 +42,7 @@ RUN rosdep update
 # Clone clever
 RUN mkdir -p /home/$ROSUSER/catkin_ws/src \
 	&& cd /home/$ROSUSER/catkin_ws/src \
-	&& git clone --depth 1 https://github.com/CopterExpress/clever \
+	&& git clone --depth 1 https://github.com/goldarte/clever -b target-system-id \
 	&& git clone --depth 1 https://github.com/CopterExpress/ros_led \
 	&& ls /home/$ROSUSER/catkin_ws/src
 
@@ -76,26 +76,26 @@ RUN git clone --depth 1 https://github.com/PX4/jMAVSim /home/$ROSUSER/jMAVSim \
 	&& git submodule update --init --recursive \
 	&& ant create_run_jar copy_res
 
-# Copy data from repo
-COPY launch/clover.launch /home/$ROSUSER/catkin_ws/src/clever/clover/launch
-COPY sitl/configs /home/$ROSUSER/sitl/configs/
-
-# Source environment variables
 USER root
+
+# Install required python libs
+RUN pip install geographiclib
+
+# Copy data from repo
+COPY --chown=user:root launch/clover.launch /home/$ROSUSER/catkin_ws/src/clever/clover/launch
+COPY --chown=user:root sitl/configs /home/$ROSUSER/sitl/configs/
 COPY --chown=user:root scripts /scripts/
 
+# Source environment variables
 RUN echo "source /opt/ros/melodic/setup.bash" >> /root/.bashrc \
 	&& echo "source /home/${ROSUSER}/catkin_ws/devel/setup.bash" >> /root/.bashrc
 
-# Copy services from repo
+# Copy services from repo and enable them
 COPY services/* /lib/systemd/system/
 RUN systemctl enable roscore \
 	&& systemctl enable clover \
 	&& systemctl enable sitl \
 	&& systemctl enable jmavsim
-
-# Install required python libs
-RUN pip install geographiclib
 
 # Expose ROS and local Mavlink ports
 EXPOSE 14556/udp 14557/udp 14560/udp 11311 8080 8081 57575
