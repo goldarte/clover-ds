@@ -2,6 +2,7 @@
     <arg name="fcu_conn" default="udp"/>
     <arg name="fcu_ip" default="127.0.0.1"/>
     <arg name="gcs_bridge" default=""/>
+    <arg name="fcu_sys_id" default="1"/>
 
     <!-- log formatting -->
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}]: ${logger}: ${message}"/>
@@ -11,6 +12,7 @@
         <arg name="fcu_conn" value="$(arg fcu_conn)"/>
         <arg name="fcu_ip" value="$(arg fcu_ip)"/>
         <arg name="gcs_bridge" value="$(arg gcs_bridge)"/>
+        <arg name="fcu_sys_id" value="$(arg fcu_sys_id)"/>
     </include>
 
     <!-- main nodelet manager -->
